@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emma — Photography</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #fff;
+      color: #171717;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    header {
+      padding: 34px 6% 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+    a { color: inherit; text-decoration: none; }
+    .brand { font-size: 18px; letter-spacing: 2px; }
+    .subtitle { font-size: 11px; letter-spacing: 2px; color: #777; }
+    main { padding: 55px 6%; }
+    h1 { font-size: clamp(32px, 5vw, 58px); font-weight: 400;
+         letter-spacing: -2px; margin: 0 0 12px; }
+    .intro { color: #777; font-size: 13px; margin-bottom: 45px; }
+    .collections {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 35px 22px;
+    }
+    .cover {
+      width: 100%; aspect-ratio: 4 / 3;
+      object-fit: cover; display: block;
+      background: #f1f0ed;
+    }
+    .collection { cursor: pointer; }
+    .collection h2 { font-size: 14px; font-weight: 400;
+                     margin: 13px 0 5px; }
+    .collection p { font-size: 11px; color: #888; margin: 0; }
+    .back {
+      border: 0; background: none; padding: 0;
+      font: inherit; font-size: 12px; cursor: pointer;
+      margin-bottom: 35px;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .gallery img {
+      width: 100%; aspect-ratio: 3 / 4;
+      object-fit: cover; background: #f1f0ed;
+      cursor: zoom-in; display: block;
+    }
+    .gallery img.wide { aspect-ratio: 4 / 3; }
+    .hidden { display: none !important; }
+    .lightbox {
+      position: fixed; inset: 0; z-index: 10;
+      background: rgba(255,255,255,.97);
+      display: flex; align-items: center;
+      justify-content: center; padding: 45px;
+    }
+    .lightbox img {
+      max-width: 100%; max-height: 88vh; object-fit: contain;
+    }
+    .close {
+      position: absolute; top: 20px; right: 25px;
+      border: 0; background: none; font-size: 30px;
+      cursor: pointer;
+    }
+    footer {
+      padding: 25px 6%; border-top: 1px solid #eee;
+      color: #999; font-size: 10px; letter-spacing: 1px;
+    }
+    @media (max-width: 600px) {
+      header { padding: 24px 5%; }
+      main { padding: 38px 5%; }
+      .collections { gap: 25px 12px; }
+      .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lightbox { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="#" onclick="home(); return false;">EMMA.</a>
+    <span class="subtitle">PHOTOGRAPHY</span>
+  </header>
+
+  <main>
+    <section id="home">
+      <h1>Selected moments.</h1>
+      <p class="intro">A collection of things I've seen and felt.</p>
+
+      <div class="collections">
+        <article class="collection" onclick="openCollection('city')">
+          <img class="cover" src="images/city-1.jpg" alt="City walks">
+          <h2>01 — City Walks</h2>
+          <p>Streets, places &amp; everyday life</p>
+        </article>
+
+        <article class="collection" onclick="openCollection('people')">
+          <img class="cover" src="images/people-1.jpg" alt="People">
+          <h2>02 — People</h2>
+          <p>Faces &amp; little moments</p>
+        </article>
+
+        <article class="collection" onclick="openCollection('nature')">
+          <img class="cover" src="images/nature-1.jpg" alt="Nature">
+          <h2>03 — Nature</h2>
+          <p>Light, landscapes &amp; details</p>
+        </article>
+
+        <article class="collection" onclick="openCollection('diary')">
+          <img class="cover" src="images/diary-1.jpg" alt="Visual diary">
+          <h2>04 — Visual Diary</h2>
+          <p>Fragments of everyday life</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="album" class="hidden">
+      <button class="back" onclick="home()">← ALL COLLECTIONS</button>
+      <h1 id="album-title">Collection</h1>
+      <p class="intro" id="album-description"></p>
+      <div class="gallery" id="gallery"></div>
+    </section>
+  </main>
+
+  <div id="lightbox" class="lightbox hidden"
+       onclick="closePhoto()">
+    <button class="close" aria-label="Close"
+            onclick="closePhoto()">×</button>
+    <img id="large-photo" src="" alt="Enlarged photograph">
+  </div>
+
+  <footer>EMMA. — PHOTOGRAPHY</footer>
+
+  <script>
+    const albums = {
+      city: {
+        title: "City Walks",
+        description: "Streets, places & everyday life",
+        photos: ["city-1.jpg", "city-2.jpg", "city-3.jpg"]
+      },
+      people: {
+        title: "People",
+        description: "Faces & little moments",
+        photos: ["people-1.jpg", "people-2.jpg", "people-3.jpg"]
+      },
+      nature: {
+        title: "Nature",
+        description: "Light, landscapes & details",
+        photos: ["nature-1.jpg", "nature-2.jpg", "nature-3.jpg"]
+      },
+      diary: {
+        title: "Visual Diary",
+        description: "Fragments of everyday life",
+        photos: ["diary-1.jpg", "diary-2.jpg", "diary-3.jpg"]
+      }
+    };
+
+    function openCollection(name) {
+      const album = albums[name];
+      document.getElementById("home").classList.add("hidden");
+      document.getElementById("album").classList.remove("hidden");
+      document.getElementById("album-title").textContent = album.title;
+      document.getElementById("album-description").textContent =
+        album.description;
+
+      const gallery = document.getElementById("gallery");
+      gallery.innerHTML = "";
+
+      album.photos.forEach(file => {
+        const img = document.createElement("img");
+        img.src = "images/" + file;
+        img.alt = album.title;
+        img.loading = "lazy";
+        img.onclick = () => showPhoto(img.src);
+        img.onerror = () => img.style.display = "none";
+        gallery.appendChild(img);
+      });
+
+      window.scrollTo(0, 0);
+      location.hash = name;
+    }
+
+    function home() {
+      document.getElementById("album").classList.add("hidden");
+      document.getElementById("home").classList.remove("hidden");
+      document.getElementById("lightbox").classList.add("hidden");
+      location.hash = "";
+      window.scrollTo(0, 0);
+    }
+
+    function showPhoto(src) {
+      document.getElementById("large-photo").src = src;
+      document.getElementById("lightbox").classList.remove("hidden");
+    }
+
+    function closePhoto() {
+      document.getElementById("lightbox").classList.add("hidden");
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closePhoto();
+    });
+  </script>
+</body>
+</html>
